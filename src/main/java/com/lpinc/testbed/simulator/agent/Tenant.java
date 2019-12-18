@@ -30,7 +30,7 @@ public class Tenant extends Agent {
         this.bankAccount = new BankAccount(this, balance);
         this.period = period;
         this.countdown = period;
-//        System.out.println(honesty); //uncomment to check example output, only work for total randomisation
+//        System.out.println(honesty);
     }
 
     @Override
@@ -56,8 +56,6 @@ public class Tenant extends Agent {
         }
     }
 
-    //simulator judge the likeliness to pay rent by this function
-    //override with any strategy to judge how it perform
     //check balance to handle long loop in simulation
     @Override
     public int response(Event<? extends Agent, ? extends Resource> event) {

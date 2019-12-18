@@ -13,16 +13,24 @@ public class Tenant extends Agent {
     private static int idCount = 0;
 
     private final int ID;
-    private double honesty;
-    private BankAccount bankAccount;
+    private final BankAccount bankAccount;
+    private final int period;
+    private final double balance;
+    private int countdown;
+
+    private final double honesty;
 
     private Random random = new Random();
 
-    public Tenant(double balance, double likeness) {
+    public Tenant(double balance, int period) {
         super(Role.TENANT);
+        this.balance = balance;
         this.ID = idCount++;
-        this.honesty = likeness;
+        this.honesty = random.nextDouble();
         this.bankAccount = new BankAccount(this, balance);
+        this.period = period;
+        this.countdown = period;
+//        System.out.println(honesty); //uncomment to check example output, only work for total randomisation
     }
 
     @Override
@@ -40,8 +48,20 @@ public class Tenant extends Agent {
         return ExitCode.ERROR;
     }
 
+    private void checkBalance() {
+        countdown--;
+        if (countdown == 0) {
+            bankAccount.transact(balance - bankAccount.getBalance());
+            countdown = period;
+        }
+    }
+
+    //simulator judge the likeliness to pay rent by this function
+    //override with any strategy to judge how it perform
+    //check balance to handle long loop in simulation
     @Override
     public int response(Event<? extends Agent, ? extends Resource> event) {
+        checkBalance();
         if (random.nextDouble() > honesty) return ExitCode.FAILURE;
         if (event instanceof RentPaymentEvent) {
             double rent = ((RentPaymentEvent) event).getRent();

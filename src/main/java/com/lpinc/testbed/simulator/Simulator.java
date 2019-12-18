@@ -36,18 +36,16 @@ public abstract class Simulator<A extends Agent, R extends Resource> {
             int row = resource.getID();
             int col = agent.getID();
             double weight = resource.getOwner().getRepWeight();
-//                log.addAll(IntStream.range(0, runs).parallel().mapToObj(i -> {
-            IntStream.range(0, runs).parallel().forEach(i -> {
+            for (int i = 0; i < runs; i++) {
                 //trigger event
                 Event<A, R> event = generateEvent(agent, resource);
                 event.process(this);
+//                log.add(event);
                 //update reputation
                 int sub = event.getResult() ? 0 : 1;
                 double val = weight - sub;
                 reputations[row][col] += val;
-            });
-//                    return event;
-//                }).collect(Collectors.toList()));
+            }
             //update truth value
             double p = calculatedTruths[row][col];
             double mean = (p * weight - (1 - p) * (1 - weight)) * runs;

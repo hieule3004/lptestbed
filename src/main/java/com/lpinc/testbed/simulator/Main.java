@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 public class Main {
 
     public static void main(String[] args) {
-        runSampleSimulator();
+//        runSampleSimulator();
+        runSingularSimulator(1, 50, 12);
     }
 
     public static void runSampleSimulator() {
@@ -22,8 +23,8 @@ public class Main {
         double[] prices = new double[4];
         Arrays.fill(prices, 1);
         Arrays.fill(landPrices, prices);
-        double[][] tenantValues = new double[20][2];
-        Arrays.fill(tenantValues, new double[] {100000, 0.8});
+        int[][] tenantValues = new int[20][2];
+        Arrays.fill(tenantValues, new int[] {100000, 12});
 
         List<Land> resources = new ArrayList<>();
         for (double[] landPrice : landPrices) {
@@ -34,10 +35,29 @@ public class Main {
                     .collect(Collectors.toList()));
         }
         List<Tenant> agents = new ArrayList<>();
-        for (double[] value : tenantValues) {
+        for (int[] value : tenantValues) {
             Tenant tenant = new Tenant(value[0], value[1]);
             agents.add(tenant);
         }
+
+        Simulator<Tenant, Land> simulator = new Simulator<>(agents, resources) {
+            @Override
+            public Event<Tenant, Land> generateEvent(Tenant tenant, Land land) {
+                return new RentPaymentEvent(tenant, land);
+            }
+        };
+        simulator.run();
+    }
+
+    public static void runSingularSimulator(double rent, double balance, int period) {
+        List<Tenant> agents = new ArrayList<>();
+        List<Land> resources = new ArrayList<>();
+
+        double weight = 0.1;
+        Landlord landlord = new Landlord(new double[] { rent }, weight);
+        resources.add((Land) landlord.getResources().get(0));
+        Tenant tenant = new Tenant(balance, period);
+        agents.add(tenant);
 
         Simulator<Tenant, Land> simulator = new Simulator<>(agents, resources) {
             @Override

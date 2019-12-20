@@ -1,10 +1,10 @@
 package com.lpinc.testbed.simulator.resource;
 
-import com.lpinc.testbed.simulator.agent.Agent;
+import com.lpinc.testbed.simulator.principal.Principal;
 
-public abstract class Resource {
+public interface Resource<P extends Principal<P>> {
 
-    public abstract int getID();
+    int getID();
 
-    public abstract Agent getOwner();
+    P getOwner();
 }

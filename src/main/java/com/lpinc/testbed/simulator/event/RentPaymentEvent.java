@@ -1,11 +1,12 @@
 package com.lpinc.testbed.simulator.event;
 
-import com.lpinc.testbed.simulator.Simulator;
 import com.lpinc.testbed.simulator.agent.Tenant;
 import com.lpinc.testbed.simulator.resource.Land;
+import com.lpinc.testbed.simulator.utils.ExitCode;
 
-public class RentPaymentEvent extends Event<Tenant, Land> {
+public class RentPaymentEvent implements Event {
 
+    private ExitCode result;
     private Tenant tenant;
     private Land land;
 
@@ -19,14 +20,16 @@ public class RentPaymentEvent extends Event<Tenant, Land> {
     }
 
     @Override
-    public void process(Simulator<Tenant, Land> simulator) {
-        int response = tenant.response(this);
-        setResult(response == ExitCode.SUCCESS);
+    public ExitCode process() {
+        result = tenant.response(this);
+        if (result == ExitCode.ERROR) throw new UnsupportedOperationException("Error occurred");
+        return result;
     }
 
     @Override
     public String toString() {
-        return String.format("%s %s %s monthly rent of %s",
-                tenant, getResult() ? "paid" : "didn't pay", land.getOwner(), land);
+        return String.format("%s %s %s monthly rent of %.2f, balance is now %s",
+                tenant, result == ExitCode.SUCCESS ? "paid" : "didn't pay", land.getOwner(),
+                land.getRent(), tenant.getCurrentBalance());
     }
 }

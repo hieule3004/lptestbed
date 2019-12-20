@@ -1,20 +1,8 @@
 package com.lpinc.testbed.simulator.event;
 
-import com.lpinc.testbed.simulator.Simulator;
-import com.lpinc.testbed.simulator.agent.Agent;
-import com.lpinc.testbed.simulator.resource.Resource;
+import com.lpinc.testbed.simulator.utils.ExitCode;
 
-public abstract class Event<A extends Agent, R extends Resource> {
+public interface Event {
 
-    private boolean result;
-
-    public boolean getResult() {
-        return result;
-    }
-
-    protected void setResult(boolean result) {
-        this.result = result;
-    }
-
-    public abstract void process(Simulator<A, R> simulator);
+    ExitCode process();
 }

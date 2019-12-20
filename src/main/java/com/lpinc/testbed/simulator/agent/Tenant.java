@@ -1,36 +1,36 @@
 package com.lpinc.testbed.simulator.agent;
 
 import com.lpinc.testbed.simulator.event.Event;
-import com.lpinc.testbed.simulator.event.ExitCode;
 import com.lpinc.testbed.simulator.event.RentPaymentEvent;
-import com.lpinc.testbed.simulator.resource.BankAccount;
-import com.lpinc.testbed.simulator.resource.Resource;
+import com.lpinc.testbed.simulator.utils.ExitCode;
 
 import java.util.Random;
 
-public class Tenant extends Agent {
+public class Tenant implements Agent {
 
     private static int idCount = 0;
 
     private final int ID;
-    private final BankAccount bankAccount;
-    private final int period;
     private final double balance;
+    private final int period;
+
+    private double currentBalance;
     private int countdown;
-
     private final double honesty;
-
     private Random random = new Random();
 
     public Tenant(double balance, int period) {
-        super(Role.TENANT);
-        this.balance = balance;
         this.ID = idCount++;
-        this.honesty = random.nextDouble();
-        this.bankAccount = new BankAccount(this, balance);
+        this.balance = balance;
         this.period = period;
+        this.currentBalance = balance;
         this.countdown = period;
+        this.honesty = 0.8;
 //        System.out.println(honesty);
+    }
+
+    public double getCurrentBalance() {
+        return currentBalance;
     }
 
     @Override
@@ -39,37 +39,34 @@ public class Tenant extends Agent {
     }
 
     @Override
-    public double getRepWeight() {
-        return 0;
-    }
-
-    @Override
-    public int request(Event<? extends Agent, ? extends Resource> event) {
+    public ExitCode request(Event event) {
         return ExitCode.ERROR;
     }
 
-    private void checkBalance() {
+    @Override
+    public ExitCode response(Event event) {
         countdown--;
         if (countdown == 0) {
-            bankAccount.transact(balance - bankAccount.getBalance());
+            currentBalance = balance;
             countdown = period;
         }
-    }
 
-    //check balance to handle long loop in simulation
-    @Override
-    public int response(Event<? extends Agent, ? extends Resource> event) {
-        checkBalance();
         if (random.nextDouble() > honesty) return ExitCode.FAILURE;
+
         if (event instanceof RentPaymentEvent) {
             double rent = ((RentPaymentEvent) event).getRent();
-            if (rent <= bankAccount.getBalance()) {
-                bankAccount.transact(-rent);
+            if (rent <= currentBalance) {
+                currentBalance -= rent;
                 return ExitCode.SUCCESS;
             } else {
                 return ExitCode.FAILURE;
             }
         }
         return ExitCode.ERROR;
+    }
+
+    @Override
+    public String toString() {
+        return String.join(" ", getClass().getSimpleName(), String.valueOf(ID));
     }
 }

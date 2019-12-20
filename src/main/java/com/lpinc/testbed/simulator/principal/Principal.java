@@ -6,7 +6,5 @@ import java.util.List;
 
 public interface Principal<P extends Principal<P>> {
 
-    List<? extends Resource<P>> getResources();
-
-    double getRepWeight();
+  List<? extends Resource<P>> getResources();
 }

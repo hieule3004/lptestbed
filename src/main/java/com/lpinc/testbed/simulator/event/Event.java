@@ -4,5 +4,5 @@ import com.lpinc.testbed.simulator.utils.ExitCode;
 
 public interface Event {
 
-    ExitCode process();
+  ExitCode process();
 }

@@ -4,7 +4,5 @@ import com.lpinc.testbed.simulator.principal.Principal;
 
 public interface Resource<P extends Principal<P>> {
 
-    int getID();
-
-    P getOwner();
+  P getOwner();
 }

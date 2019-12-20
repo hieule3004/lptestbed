@@ -6,30 +6,31 @@ import com.lpinc.testbed.simulator.utils.ExitCode;
 
 public class RentPaymentEvent implements Event {
 
-    private ExitCode result;
-    private Tenant tenant;
-    private Land land;
+  private final Tenant tenant;
+  private final Land land;
 
-    public RentPaymentEvent(Tenant tenant, Land land) {
-        this.tenant = tenant;
-        this.land = land;
-    }
+  private ExitCode result;
 
-    public double getRent() {
-        return land.getRent();
-    }
+  public RentPaymentEvent(Tenant tenant, Land land) {
+    this.tenant = tenant;
+    this.land = land;
+  }
 
-    @Override
-    public ExitCode process() {
-        result = tenant.response(this);
-        if (result == ExitCode.ERROR) throw new UnsupportedOperationException("Error occurred");
-        return result;
-    }
+  public double getRent() {
+    return land.getRent();
+  }
 
-    @Override
-    public String toString() {
-        return String.format("%s %s %s monthly rent of %.2f, balance is now %s",
-                tenant, result == ExitCode.SUCCESS ? "paid" : "didn't pay", land.getOwner(),
-                land.getRent(), tenant.getCurrentBalance());
-    }
+  @Override
+  public ExitCode process() {
+    result = tenant.response(this);
+    if (result == ExitCode.ERROR) throw new UnsupportedOperationException("Error occurred");
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("%s %s %s monthly rent of %.2f, balance is now %s",
+        tenant, result == ExitCode.SUCCESS ? "paid" : "didn't pay", land.getOwner(),
+        land.getRent(), tenant.getCurrentBalance());
+  }
 }

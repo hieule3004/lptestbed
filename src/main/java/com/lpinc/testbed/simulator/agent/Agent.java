@@ -5,9 +5,7 @@ import com.lpinc.testbed.simulator.utils.ExitCode;
 
 public interface Agent {
 
-    int getID();
+  ExitCode request(Event event);
 
-    ExitCode request(Event event);
-
-    ExitCode response(Event event);
+  ExitCode response(Event event);
 }

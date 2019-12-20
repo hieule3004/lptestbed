@@ -16,11 +16,6 @@ public class EstateSimulator extends Simulator<Tenant, Land> {
     super(agents, resources);
   }
 
-  @Override
-  public Event createEvent(Tenant tenant, Land land) {
-    return new RentPaymentEvent(tenant, land);
-  }
-
   public void print(Double[][] matrix) {
     AtomicInteger length = new AtomicInteger();
     String block = Arrays.stream(matrix).map(row ->
@@ -31,6 +26,11 @@ public class EstateSimulator extends Simulator<Tenant, Land> {
     String dash = "=".repeat(length.get() + 2);
     String string = String.format("%s\n|%s|\n%s", dash, block, dash);
     System.out.println(string);
+  }
+
+  @Override
+  public Event createEvent(Tenant tenant, Land land) {
+    return new RentPaymentEvent(tenant, land);
   }
 
   @Override

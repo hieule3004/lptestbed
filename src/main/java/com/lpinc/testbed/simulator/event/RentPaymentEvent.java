@@ -16,14 +16,16 @@ public class RentPaymentEvent implements Event {
     this.land = land;
   }
 
-  public double getRent() {
-    return land.getRent();
+  public Land getLand() {
+    return land;
   }
 
   @Override
   public ExitCode process() {
     result = tenant.response(this);
-    if (result == ExitCode.ERROR) throw new UnsupportedOperationException("Error occurred");
+    if (result == ExitCode.ERROR) {
+      throw new UnsupportedOperationException("Error occurred");
+    }
     return result;
   }
 

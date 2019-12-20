@@ -1,5 +1,6 @@
 package com.lpinc.testbed.simulator.agent;
 
+import com.lpinc.testbed.simulator.utils.Renewable;
 import com.lpinc.testbed.simulator.event.Event;
 import com.lpinc.testbed.simulator.event.RentPaymentEvent;
 import com.lpinc.testbed.simulator.utils.ExitCode;
@@ -10,27 +11,21 @@ public class Tenant implements Agent {
 
   private static int idCount = 0;
 
-  private final double balance;
-  private final int period;
+  private final Renewable<Double> balance;
 
   private final String name;
   private final double honesty;
-  private double currentBalance;
-  private int countdown;
   private Random random;
 
   public Tenant(double balance, int period) {
-    this.balance = balance;
-    this.period = period;
+    this.balance = new Renewable<>(balance, period);
     name = String.valueOf(idCount++);
     honesty = 0.8;//random.nextDouble();
-    currentBalance = balance;
-    countdown = period;
     random = new Random();
   }
 
   public double getCurrentBalance() {
-    return currentBalance;
+    return balance.get();
   }
 
   @Override
@@ -40,20 +35,13 @@ public class Tenant implements Agent {
 
   @Override
   public ExitCode response(Event event) {
-    countdown--;
-    if (countdown == 0) {
-      currentBalance = balance;
-      countdown = period;
+    if (random.nextDouble() > honesty) {
+      return ExitCode.FAILURE;
     }
-
-      if (random.nextDouble() > honesty) {
-          return ExitCode.FAILURE;
-      }
-
     if (event instanceof RentPaymentEvent) {
-      double rent = ((RentPaymentEvent) event).getRent();
-      if (rent <= currentBalance) {
-        currentBalance -= rent;
+      double rent = ((RentPaymentEvent) event).getLand().getRent();
+      if (rent <= getCurrentBalance()) {
+        balance.set(balance.get() - rent);
         return ExitCode.SUCCESS;
       } else {
         return ExitCode.FAILURE;

@@ -39,9 +39,9 @@ public abstract class Simulator<A extends Agent, R extends Resource<?>> {
         Event event = createEvent(agents.get(i), resources.get(j));
         ExitCode result = event.process();
         //update event count
-          if (result == ExitCode.SUCCESS) {
-              truthTable[i][j]++;
-          }
+        if (result == ExitCode.SUCCESS) {
+          truthTable[i][j]++;
+        }
         lock.unlock(i, j);
       });
       //calculate truth value

@@ -1,8 +1,8 @@
 package com.lpinc.testbed.simulator.resource;
 
-import com.lpinc.testbed.simulator.principal.Principal;
+import com.lpinc.testbed.simulator.agent.Agent;
 
-public interface Resource<P extends Principal<P>> {
+public interface Resource<A extends Agent> {
 
-  P getOwner();
+  A getOwner();
 }

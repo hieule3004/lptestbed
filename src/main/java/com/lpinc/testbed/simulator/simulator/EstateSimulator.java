@@ -1,19 +1,22 @@
 package com.lpinc.testbed.simulator.simulator;
 
 import com.lpinc.testbed.simulator.agent.Tenant;
-import com.lpinc.testbed.simulator.event.Event;
+import com.lpinc.testbed.simulator.contract.Contract;
+import com.lpinc.testbed.simulator.contract.RentContract;
 import com.lpinc.testbed.simulator.event.RentPaymentEvent;
-import com.lpinc.testbed.simulator.resource.Land;
-
+import com.lpinc.testbed.simulator.principal.Landlord;
+import com.lpinc.testbed.simulator.resource.Property;
+import com.lpinc.testbed.simulator.utils.ExitCode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class EstateSimulator extends Simulator<Tenant, Land> {
+public class EstateSimulator extends Simulator<Landlord, Tenant, Property> {
 
-  public EstateSimulator(List<Tenant> agents, List<Land> resources) {
-    super(agents, resources);
+  public EstateSimulator(List<Tenant> tenants, List<Property> resources,
+      RentContract[][] contracts) {
+    super(tenants, resources, contracts);
   }
 
   public void print(Double[][] matrix) {
@@ -29,8 +32,10 @@ public class EstateSimulator extends Simulator<Tenant, Land> {
   }
 
   @Override
-  public Event createEvent(Tenant tenant, Land land) {
-    return new RentPaymentEvent(tenant, land);
+  public ExitCode processEvent(Contract<Landlord, Tenant, Property> contract) {
+    return contract instanceof RentContract
+      ? new RentPaymentEvent().process((RentContract) contract)
+      : ExitCode.safe(ExitCode.ERROR);
   }
 
   @Override

@@ -1,13 +1,12 @@
 package com.lpinc.testbed.simulator.agent;
 
-import com.lpinc.testbed.simulator.utils.Renewable;
-import com.lpinc.testbed.simulator.event.Event;
-import com.lpinc.testbed.simulator.event.RentPaymentEvent;
+import com.lpinc.testbed.simulator.contract.Clause;
+import com.lpinc.testbed.simulator.contract.RentPayClause;
 import com.lpinc.testbed.simulator.utils.ExitCode;
-
+import com.lpinc.testbed.simulator.utils.Renewable;
 import java.util.Random;
 
-public class Tenant implements Agent {
+public class Tenant implements Consumer {
 
   private static int idCount = 0;
 
@@ -24,23 +23,14 @@ public class Tenant implements Agent {
     random = new Random();
   }
 
-  public double getCurrentBalance() {
-    return balance.get();
-  }
-
   @Override
-  public ExitCode request(Event event) {
-    return ExitCode.ERROR;
-  }
-
-  @Override
-  public ExitCode response(Event event) {
+  public ExitCode response(Clause<?, ?, ?> clause) {
     if (random.nextDouble() > honesty) {
       return ExitCode.FAILURE;
     }
-    if (event instanceof RentPaymentEvent) {
-      double rent = ((RentPaymentEvent) event).getLand().getRent();
-      if (rent <= getCurrentBalance()) {
+    if (clause instanceof RentPayClause) {
+      double rent = ((RentPayClause) clause).getContract().getResource().getRent();
+      if (rent <= balance.get()) {
         balance.set(balance.get() - rent);
         return ExitCode.SUCCESS;
       } else {

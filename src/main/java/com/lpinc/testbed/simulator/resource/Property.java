@@ -2,7 +2,7 @@ package com.lpinc.testbed.simulator.resource;
 
 import com.lpinc.testbed.simulator.principal.Landlord;
 
-public class Land implements Resource<Landlord> {
+public class Property implements Resource<Landlord> {
 
   private static int idCount = 0;
 
@@ -10,7 +10,7 @@ public class Land implements Resource<Landlord> {
   private double rent;
   private final String name;
 
-  public Land(Landlord owner, double rent) {
+  public Property(Landlord owner, double rent) {
     this.owner = owner;
     this.rent = rent;
     name = String.valueOf(idCount++);

@@ -1,4 +1,4 @@
-package com.lpinc.testbed.simulator.principal;
+package com.lpinc.testbed.simulator.agent.provider;
 
 import com.lpinc.testbed.simulator.agent.Agent;
 import com.lpinc.testbed.simulator.resource.Resource;

@@ -1,23 +1,24 @@
 package com.lpinc.testbed.simulator.resource;
 
-import com.lpinc.testbed.simulator.principal.Landlord;
+import com.lpinc.testbed.simulator.agent.provider.Landlord;
 
 public class Property implements Resource<Landlord> {
 
   private static int idCount = 0;
 
   private final Landlord owner;
-  private double rent;
+  private final Double[] data;
   private final String name;
 
   public Property(Landlord owner, double rent) {
     this.owner = owner;
-    this.rent = rent;
+    this.data = new Double[] {rent};
     name = String.valueOf(idCount++);
   }
 
-  public double getRent() {
-    return rent;
+  @Override
+  public Double[] getData() {
+    return data;
   }
 
   @Override

@@ -1,18 +1,17 @@
 package com.lpinc.testbed.simulator.contract;
 
-import com.lpinc.testbed.simulator.agent.Tenant;
-import com.lpinc.testbed.simulator.principal.Landlord;
+import com.lpinc.testbed.simulator.contract.clause.MaintenanceClause;
+import com.lpinc.testbed.simulator.contract.clause.RentPayClause;
+import com.lpinc.testbed.simulator.agent.customer.Tenant;
+import com.lpinc.testbed.simulator.agent.provider.Landlord;
 import com.lpinc.testbed.simulator.resource.Property;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RentContract extends Contract<Landlord, Tenant, Property> {
 
-  private static final List<Clause<Landlord, Tenant, Property>> clauses = new ArrayList<>();
-
-  public RentContract(Tenant tenant, Property property) {
-    super(property.getOwner(), tenant, property, clauses);
+  public RentContract(Tenant tenant, Property property, int duration) {
+    super(property.getOwner(), tenant, property, duration);
     //clause
-    clauses.add(new RentPayClause(this));
+    getClauses().add(new RentPayClause(this));
+    getClauses().add(new MaintenanceClause(this));
   }
 }

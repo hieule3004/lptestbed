@@ -1,8 +1,8 @@
-package com.lpinc.testbed.simulator.principal;
+package com.lpinc.testbed.simulator.agent.provider;
 
-import com.lpinc.testbed.simulator.contract.Clause;
+import com.lpinc.testbed.simulator.contract.clause.Clause;
 import com.lpinc.testbed.simulator.resource.Property;
-import com.lpinc.testbed.simulator.utils.ExitCode;
+import com.lpinc.testbed.simulator.utils.Flag;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,13 +20,18 @@ public final class Landlord implements Provider {
   }
 
   @Override
+  public Double[] getData() {
+    return null;
+  }
+
+  @Override
   public List<Property> getResources() {
     return resources;
   }
 
   @Override
-  public ExitCode response(Clause<?, ?, ?> clause) {
-    return ExitCode.ERROR;
+  public boolean response(Clause<?> clause) {
+    return clause.getFlag() == Flag.MAINTENANCE;
   }
 
   @Override

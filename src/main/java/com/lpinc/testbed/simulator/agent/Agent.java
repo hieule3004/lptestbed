@@ -1,10 +1,12 @@
 package com.lpinc.testbed.simulator.agent;
 
-import com.lpinc.testbed.simulator.contract.clause.Clause;
+import com.lpinc.testbed.simulator.event.request.Request;
+import com.lpinc.testbed.simulator.event.response.Response;
+import com.lpinc.testbed.simulator.utils.Data;
+import javax.validation.constraints.NotNull;
 
-public interface Agent {
+public interface Agent extends Data {
 
-  Double[] getData();
-
-  boolean response(Clause<?> clause);
+  @NotNull
+  Response<?> reply(Request request);
 }

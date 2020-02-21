@@ -1,8 +1,8 @@
 package com.lpinc.testbed.simulator.resource;
 
-import com.lpinc.testbed.simulator.agent.provider.Landlord;
+import com.lpinc.testbed.simulator.agent.Landlord;
 
-public class Property implements Resource<Landlord> {
+public final class Property implements Resource {
 
   private static int idCount = 0;
 

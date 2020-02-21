@@ -6,13 +6,13 @@ import java.util.stream.IntStream;
 
 public class Repeat {
 
+  public static void sequential(int length, Consumer<Integer> function) {
+    IntStream.range(0, length).forEach(function::accept);
+  }
+
   public static void parallel(int length, Consumer<Integer> function) {
     IntStream.range(0, length).parallel().forEach(function::accept);
   }
-
-//  public static void each(int length, Consumer<Integer> function) {
-//    IntStream.range(0, length).forEach(function::accept);
-//  }
 
   public static void fill(Object[] array, Function<Integer, Object> function) {
     parallel(array.length, i -> {

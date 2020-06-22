@@ -1,5 +1,0 @@
-package com.lpinc.testbed.decisiontree;
-
-public class Classifier {
-
-}

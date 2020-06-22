@@ -1,23 +1,25 @@
 package com.lpinc.testbed.simulator.runner;
 
+import com.lpinc.testbed.simulator.agent.Agent;
 import com.lpinc.testbed.simulator.agent.Landlord;
-import com.lpinc.testbed.simulator.contract.RentContract;
 import com.lpinc.testbed.simulator.agent.Tenant;
+import com.lpinc.testbed.simulator.contract.RentContract;
 import com.lpinc.testbed.simulator.resource.Property;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class EstateRunner {
 
-  ParallelRunner runner;
+  private final ParallelRunner runner;
 
   public EstateRunner(Double[][] rents, Double[] balances, Integer[][] periods) {
     this.runner = new ParallelRunner(initiate(rents, balances, periods));
   }
 
-  private static Simulator[][] initiate(Double[][] rents, Double[] balances, Integer[][] periods) {
+  private Simulator[][] initiate(Double[][] rents, Double[] balances, Integer[][] periods) {
     List<Property> properties = Arrays.stream(rents).flatMap(rent -> {
       Landlord landlord = new Landlord();
       return Arrays.stream(rent).map(r -> new Property(landlord, r));
@@ -49,9 +51,14 @@ public class EstateRunner {
     System.out.println(string);
   }
 
-  public void run() {
-    runner.run();
-    print(runner.getCalcTable());
+  public Map<Agent, Double> run() {
+    Map<Agent, Double> result = runner.run();
+//   Note: Uncomment to print console
+//    double[][][] ratingTable = runner.getRatingTable();
+//    print(ratingTable);
+//    result.forEach((agent, trust) -> System.out.printf("%s[trust=%s, judgement=%s]%n",
+//        agent, trust, agent.getJudgement()));
+    return result;
   }
 
 }

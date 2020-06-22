@@ -25,6 +25,8 @@ function redirect(path) {
 		
 <header>
 <div class="button-area">
+	<input type="button" value="Database" onclick="redirect('/h2-console')"/>
+	<input type="button" value="Result" onclick="redirect('/result')"/>
 </div>
 </header>
 

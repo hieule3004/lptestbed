@@ -12,17 +12,17 @@ public final class Tenant implements Customer {
 
   private static int idCount = 0;
 
+  private final Random random = new Random();
   private final Double[] data;
   private final String name;
   private final double honesty;
-  private final Random random;
+  private double judgement = 2 * random.nextDouble() - 1;
+  private int ratingCount = 0;
 
   public Tenant(double balance) {
     this.data = new Double[]{balance};
     name = String.valueOf(idCount++);
     honesty = 0.8;
-//    honesty = random.nextDouble();
-    random = new Random();
   }
 
   @Override
@@ -43,5 +43,26 @@ public final class Tenant implements Customer {
   @Override
   public String toString() {
     return String.join(" ", getClass().getSimpleName(), name);
+  }
+
+  @Override
+  public double getJudgement() {
+    return judgement;
+  }
+
+  @Override
+  public void updateJudgement(double offset) {
+    judgement = (judgement * ratingCount + offset) / (ratingCount + 1);
+    ratingCount++;
+  }
+
+  @Override
+  public int getRatingCount() {
+    return ratingCount;
+  }
+
+  @Override
+  public void updateRatingCount(int number) {
+    ratingCount -= number;
   }
 }

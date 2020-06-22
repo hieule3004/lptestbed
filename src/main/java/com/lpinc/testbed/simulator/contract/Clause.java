@@ -6,12 +6,12 @@ import com.lpinc.testbed.simulator.resource.Resource;
 public final class Clause {
 
   private final Contract contract;
-  private final Agent agent;
+  private int agentIndex;
   private final Resource resource;
 
-  public Clause(Contract contract, Agent agent, Resource resource) {
+  public Clause(Contract contract, Resource resource, int agentIndex) {
     this.contract = contract;
-    this.agent = agent;
+    this.agentIndex = agentIndex;
     this.resource = resource;
   }
 
@@ -20,7 +20,11 @@ public final class Clause {
   }
 
   public final Agent getAgent() {
-    return agent;
+    return contract.getAgents().get(agentIndex);
+  }
+
+  public final Agent getOtherAgent() {
+    return contract.getAgents().get((agentIndex + 1) % 2);
   }
 
   public final Resource getResource() {

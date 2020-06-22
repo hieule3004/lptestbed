@@ -20,12 +20,16 @@ public final class Simulator {
   private final Map<Agent, Splitter<Double>> agentData;
   private final Map<Resource, Splitter<Double>> resourceData;
   private final List<Request> events;
+  private final List<Double[]> ratings;
+  private final Contract contract;
 
   public Simulator(Contract contract) {
+    this.contract = contract;
     this.log = new LinkedHashMap<>();
     this.agentData = new HashMap<>();
     this.resourceData = new HashMap<>();
     this.events = new ArrayList<>();
+    this.ratings = new ArrayList<>();
 
     contract.clausesList().forEach(c -> events.addAll(contract.getObligations(c)));
     events.sort(Event::compareTo);
@@ -56,9 +60,23 @@ public final class Simulator {
   }
 
   public void run(int branch) {
+    Map<Clause, List<Double>> values = new LinkedHashMap<>();
+    contract.clausesList().forEach(c -> values.put(c, new ArrayList<>()));
     events.forEach(obligation -> {
       Response<?> response = obligation.check(this, branch);
       log.get(obligation.getClause()).add(response);
+      values.get(obligation.getClause()).add(response.evaluate());
     });
+    ratings.add(values.values().stream()
+        .map(l -> l.stream().reduce(0.0, Double::sum) / l.size())
+        .toArray(Double[]::new));
+  }
+
+  public List<Double[]> getRatings() {
+    return ratings;
+  }
+
+  public Contract getContract() {
+    return contract;
   }
 }

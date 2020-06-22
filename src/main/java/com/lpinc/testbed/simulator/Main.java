@@ -1,16 +1,18 @@
 package com.lpinc.testbed.simulator;
 
+import com.lpinc.testbed.simulator.agent.Agent;
 import com.lpinc.testbed.simulator.runner.EstateRunner;
 import com.lpinc.testbed.simulator.utils.Repeat;
+import java.util.Map;
 
 public class Main {
 
   public static void main(String[] args) {
     runSampleSimulator();
-    runSingularSimulator(1.0, 50.0, 12);
+//    runSingularSimulator(1.0, 50.0, 12);
   }
 
-  public static void runSampleSimulator() {
+  public static Map<Agent, Double> runSampleSimulator() {
     Double[][] landPrices = new Double[5][4];
     Repeat.fill(landPrices, i -> 2.0);
     Double[] tenantValues = new Double[20];
@@ -19,7 +21,7 @@ public class Main {
     Repeat.fill(periods, i -> 12);
 
     EstateRunner simulator = new EstateRunner(landPrices, tenantValues, periods);
-    simulator.run();
+    return simulator.run();
   }
 
   public static void runSingularSimulator(double rent, double balance, int period) {

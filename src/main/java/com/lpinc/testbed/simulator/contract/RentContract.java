@@ -12,19 +12,21 @@ import java.util.List;
 public final class RentContract extends Contract {
 
   public RentContract(Tenant tenant, Property property, int months) {
-    super();
+    super(new ArrayList<>(List.of(property.getOwner(), tenant)), months);
     LocalDate date = LocalDate.now();
     //rent payment clause
-    Clause rpc = new Clause(this, tenant, property);
+    Clause rpc = new Clause(this, property, 1);
     List<Request> rpo = new ArrayList<>();
     for (int i = 0; i < months; i++) {
       rpo.add(new RentPaymentRequest(date.plusMonths(i), rpc));
     }
     addObligations(rpc, rpo);
     //maintenance clause
-    Clause mc = new Clause(this, property.getOwner(), property);
+    Clause mc = new Clause(this, property, 0);
     List<Request> mo = new ArrayList<>();
-    mo.add(new MaintenanceRequest(date.plusMonths(months / 2), mc));
+    for (int i = 0; i < months / 2; i++) {
+      mo.add(new MaintenanceRequest(date.plusMonths(2 * i), mc));
+    }
     addObligations(mc, mo);
   }
 }

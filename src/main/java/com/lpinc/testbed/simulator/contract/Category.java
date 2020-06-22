@@ -7,24 +7,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Category {
-  ESTATE,
-  TASK;
+  ESTATE(2),
+  TASK(1);
 
   private static final Map<Class<? extends Agent>, Category> tag = new HashMap<>() {{
      put(Landlord.class, ESTATE);
      put(Tenant.class, ESTATE);
   }};
 
-  private static final Map<Category, Integer> frequency = new HashMap<>() {{
-    put(ESTATE, 2);
-    put(TASK, 1);
-  }};
+  private final int frequency;
 
-  public static int getFrequency(Class<? extends Agent> cl) {
-    return frequency.get(tag.get(cl));
+  Category(int frequency) {
+    this.frequency = frequency;
   }
 
-  public void updateFrequency(Category category, int frequency) {
-    Category.frequency.put(category, frequency);
+  public static int getFrequency(Class<? extends Agent> cl) {
+    return tag.get(cl).frequency;
   }
 }
